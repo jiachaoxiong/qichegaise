@@ -3,12 +3,14 @@
   padding: 16rpx 0;
   background: #fff;
   margin-bottom: 16rpx;
+  width: 100%;
 }
-.brand-item {
+.brand-filter .brand-item {
   display: inline-block;
   padding: 12rpx 28rpx;
   font-size: 26rpx;
   color: #666;
+  flex-shrink: 0;
 }
 .brand-item.active {
   color: #ff4444;
@@ -30,6 +32,15 @@
   width: 100%;
   height: 240rpx;
   background: #eee;
+}
+.model-img.placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+}
+.placeholder-icon {
+  font-size: 72rpx;
 }
 .model-name {
   display: block;

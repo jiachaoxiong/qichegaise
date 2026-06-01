@@ -1,15 +1,18 @@
 <view class="container">
-  <view class="brand-filter">
+  <scroll-view scroll-x class="brand-filter" enhanced show-scrollbar="{{false}}">
     <view class="brand-item {{activeBrand === 'all' ? 'active' : ''}}"
           bindtap="onBrandTap" data-brand="all">全部</view>
     <view class="brand-item {{activeBrand === item ? 'active' : ''}}"
           wx:for="{{brands}}" wx:key="*this"
           bindtap="onBrandTap" data-brand="{{item}}">{{item}}</view>
-  </view>
+  </scroll-view>
   <view class="model-grid">
     <view class="model-card" wx:for="{{models}}" wx:key="id"
           bindtap="onSelectModel" data-model="{{item}}">
-      <image src="{{item.imageUrl}}" mode="aspectFill" class="model-img"/>
+      <image src="{{item.imageUrl}}" mode="aspectFill" class="model-img" wx:if="{{item.imageUrl}}"/>
+      <view class="model-img placeholder" wx:else>
+        <text class="placeholder-icon">🚗</text>
+      </view>
       <text class="model-name">{{item.brandName}} {{item.modelName}}</text>
       <text class="model-type">{{item.bodyType || ''}}</text>
     </view>
