@@ -29,13 +29,13 @@ jwt:
   expiration: 604800000
 
 wechat:
-  app-id: ${WECHAT_APP_ID:wx783366c410742903}
-  app-secret: ${WECHAT_APP_SECRET:5ad2d1e5cf8436b24da583c55bb5badc}
+  app-id: ${WECHAT_APP_ID:your-wechat-appid}
+  app-secret: ${WECHAT_APP_SECRET:your-wechat-secret}
 
 oss:
   endpoint: ${OSS_ENDPOINT:oss-cn-hangzhou.aliyuncs.com}
-  access-key-id: ${OSS_ACCESS_KEY_ID:your-key}
-  access-key-secret: ${OSS_ACCESS_KEY_SECRET:your-secret}
+  access-key-id: ${OSS_ACCESS_KEY_ID:your-oss-key}
+  access-key-secret: ${OSS_ACCESS_KEY_SECRET:your-oss-secret}
   bucket-name: ${OSS_BUCKET:qcg-photos}
 
 ai:

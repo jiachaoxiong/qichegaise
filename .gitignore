@@ -20,6 +20,11 @@ Thumbs.db
 # Superpowers
 .superpowers/
 
-# Environment
+# Secrets
 .env
 .env.local
+application-local.yml
+*.log
+
+# Node
+node_modules/
