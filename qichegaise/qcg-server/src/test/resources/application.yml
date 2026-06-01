@@ -1,0 +1,35 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:qcg_test;MODE=MySQL;DB_CLOSE_DELAY=-1;NON_KEYWORDS=USER
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+  sql:
+    init:
+      mode: never
+
+jwt:
+  secret: test-secret-key-for-integration-testing-256-bit
+  expiration: 3600000
+
+wechat:
+  app-id: test-app-id
+  app-secret: test-app-secret
+
+oss:
+  endpoint: oss-cn-hangzhou.aliyuncs.com
+  access-key-id: test-key
+  access-key-secret: test-secret
+  bucket-name: test-bucket
+
+ai:
+  api-url: https://api.example.com/v1/colorize
+  api-key: test-api-key
+  timeout: 30000
