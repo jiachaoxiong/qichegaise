@@ -1,0 +1,42 @@
+.work-card {
+  background: #fff;
+  border-radius: 16rpx;
+  margin-bottom: 20rpx;
+  overflow: hidden;
+}
+.work-img {
+  width: 100%;
+  height: 400rpx;
+  background: #eee;
+}
+.work-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16rpx 24rpx;
+}
+.work-status {
+  font-size: 24rpx;
+  padding: 4rpx 16rpx;
+  border-radius: 20rpx;
+}
+.work-status.done { background: #e8f5e9; color: #4caf50; }
+.work-status.fail { background: #ffebee; color: #f44336; }
+.work-status.pending { background: #fff3e0; color: #ff9800; }
+.work-date {
+  font-size: 22rpx;
+  color: #999;
+}
+.work-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 32rpx;
+  padding: 0 24rpx 20rpx;
+}
+.action-link {
+  font-size: 26rpx;
+  color: #667eea;
+}
+.action-link.delete {
+  color: #f44336;
+}

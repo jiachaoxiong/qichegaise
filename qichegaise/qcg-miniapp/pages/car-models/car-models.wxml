@@ -1,0 +1,20 @@
+<view class="container">
+  <view class="brand-filter">
+    <view class="brand-item {{activeBrand === 'all' ? 'active' : ''}}"
+          bindtap="onBrandTap" data-brand="all">全部</view>
+    <view class="brand-item {{activeBrand === item ? 'active' : ''}}"
+          wx:for="{{brands}}" wx:key="*this"
+          bindtap="onBrandTap" data-brand="{{item}}">{{item}}</view>
+  </view>
+  <view class="model-grid">
+    <view class="model-card" wx:for="{{models}}" wx:key="id"
+          bindtap="onSelectModel" data-model="{{item}}">
+      <image src="{{item.imageUrl}}" mode="aspectFill" class="model-img"/>
+      <text class="model-name">{{item.brandName}} {{item.modelName}}</text>
+      <text class="model-type">{{item.bodyType || ''}}</text>
+    </view>
+  </view>
+  <view class="empty" wx:if="{{models.length === 0}}">
+    <text>暂无车型数据</text>
+  </view>
+</view>

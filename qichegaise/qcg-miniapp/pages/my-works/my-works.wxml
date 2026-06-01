@@ -1,0 +1,22 @@
+<view class="container">
+  <view class="works-list">
+    <view class="work-card" wx:for="{{works}}" wx:key="id">
+      <image src="{{item.resultUrl || item.originalUrl}}" mode="aspectFill"
+             class="work-img" bindtap="onTapWork" data-id="{{item.id}}"/>
+      <view class="work-info">
+        <view class="work-status {{item.status === 'COMPLETED' ? 'done' : item.status === 'FAILED' ? 'fail' : 'pending'}}">
+          {{item.status === 'COMPLETED' ? '已完成' : item.status === 'FAILED' ? '失败' : '处理中'}}
+        </view>
+        <text class="work-date">{{item.createdAt}}</text>
+      </view>
+      <view class="work-actions">
+        <text class="action-link" wx:if="{{item.status === 'COMPLETED'}}"
+              bindtap="onViewResult" data-item="{{item}}">查看效果</text>
+        <text class="action-link delete" bindtap="onDelete" data-id="{{item.id}}">删除</text>
+      </view>
+    </view>
+  </view>
+  <view class="empty" wx:if="{{works.length === 0}}">
+    <text>还没有作品，去首页试试换色吧</text>
+  </view>
+</view>
