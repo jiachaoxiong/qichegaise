@@ -73,30 +73,86 @@ public class AiApiClient {
         return "#FF0000";
     }
 
-    // ──────── 阿里云 SegmentVehicle API ────────
+    // ──────── 阿里云 SegmentCommonImage API ────────
 
-    private String segmentVehicle(String imageUrl) throws Exception {
+    /**
+     * 调用阿里云 imageseg 的 SegmentCommonImage API。
+     * 自动识别图片中的主体（车）并分割，返回 PNG 图片 URL（主体不透明，背景透明）。
+     */
+    public String segmentVehicle(String imageUrl) throws Exception {
         CommonRequest request = new CommonRequest();
         request.setSysMethod(MethodType.POST);
         request.setSysDomain(apiEndpoint);
         request.setSysVersion("2019-12-30");
-        request.setSysAction("SegmentVehicle");
+        request.setSysAction("SegmentCommonImage");
         request.setSysProtocol(ProtocolType.HTTPS);
         request.putBodyParameter("ImageURL", imageUrl);
+        // 不设 ReturnForm，默认返回透明背景 PNG——车身不透明、背景透明
 
         CommonResponse response = client.getCommonResponse(request);
         JsonNode root = mapper.readTree(response.getData());
 
-        if (root.has("Data") && root.get("Data").has("Elements")) {
-            return root.get("Data").get("Elements").get(0).get("ImageURL").asText();
+        if (root.has("Data") && root.get("Data").has("ImageURL")) {
+            return root.get("Data").get("ImageURL").asText();
         }
         if (root.has("Message")) {
-            throw new RuntimeException("SegmentVehicle 失败: " + root.get("Message").asText());
+            throw new RuntimeException("SegmentCommonImage 失败: " + root.get("Message").asText());
         }
-        throw new RuntimeException("SegmentVehicle 返回异常: " + response.getData());
+        throw new RuntimeException("SegmentCommonImage 返回异常: " + response.getData());
     }
 
-    // ──────── 智能车身换色算法 v3 ────────
+    // ──────── 基于分割结果的精准换色 ────────
+
+    /**
+     * 在 AI 分割结果的基础上换色。
+     * segmented 图中不透明的像素 = 车身，透明的像素 = 背景。
+     * 只换车身部分的颜色，背景完全保留原图。
+     */
+    public static BufferedImage replaceColorOnSegmented(BufferedImage original, BufferedImage segmented, String hexColor) {
+        int w = original.getWidth(), h = original.getHeight();
+        BufferedImage result = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
+        Color targetColor = Color.decode(hexColor);
+        float[] targetHSB = Color.RGBtoHSB(targetColor.getRed(), targetColor.getGreen(), targetColor.getBlue(), null);
+
+        for (int y = 0; y < h; y++) {
+            for (int x = 0; x < w; x++) {
+                int segRgba = segmented.getRGB(x, y);
+                int segAlpha = (segRgba >> 24) & 0xFF;
+
+                if (segAlpha > 128) {
+                    // ✅ 车身像素（分割图中不透明）→ 换色
+                    int rgba = original.getRGB(x, y);
+                    int r = (rgba >> 16) & 0xFF;
+                    int g = (rgba >> 8) & 0xFF;
+                    int b = rgba & 0xFF;
+                    float[] hsb = Color.RGBtoHSB(r, g, b, null);
+
+                    // 保留原始亮度（光影层次），替换色相和饱和度
+                    float newSat;
+                    if (hsb[1] < 0.08f) {
+                        // 白/黑/银车身 → 用目标色饱和度，暗处降低饱和度
+                        newSat = targetHSB[1] * (0.4f + 0.6f * hsb[2]);
+                    } else {
+                        // 彩色车身 → 等比映射饱和度
+                        newSat = targetHSB[1] * Math.min(1.0f, hsb[1] / 0.5f);
+                    }
+
+                    Color newColor = Color.getHSBColor(targetHSB[0], newSat, hsb[2]);
+                    int newRgb = (0xFF << 24)
+                            | (newColor.getRed() << 16)
+                            | (newColor.getGreen() << 8)
+                            | newColor.getBlue();
+                    result.setRGB(x, y, newRgb);
+                } else {
+                    // ❌ 背景像素 → 保留原图
+                    result.setRGB(x, y, original.getRGB(x, y));
+                }
+            }
+        }
+        return result;
+    }
+
+    // ──────── 智能车身换色算法 v3（无 AI API 时的回退方案）───────
     //
     // 策略：多点种子 → 区域生长 → 最优区域评分 → 只换该区域
     //

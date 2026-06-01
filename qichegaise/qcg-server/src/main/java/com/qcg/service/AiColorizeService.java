@@ -32,6 +32,7 @@ public class AiColorizeService {
     private final CarPhotoRepository photoRepo;
     private final ColorRepository colorRepo;
     private final OssService ossService;
+    private final AiApiClient aiApiClient;
 
     public TaskResultResponse submit(User user, Long photoId, Long colorId) {
         CarPhoto photo = photoRepo.findById(photoId)
@@ -56,16 +57,37 @@ public class AiColorizeService {
                 throw new BusinessException("无法读取图片，请确认图片格式正确");
             }
 
-            // 2. HSB 颜色替换
-            BufferedImage colorized = AiApiClient.replaceColor(original, color.getHexCode());
+            // 2. 尝试调用阿里云图像分割 API 精准定位车身
+            BufferedImage colorized = null;
+            try {
+                log.info("调用 SegmentCommonImage API 分割车身: {}", imageUrl);
+                String segmentedUrl = aiApiClient.segmentVehicle(imageUrl);
+                log.info("车身分割完成: {}", segmentedUrl);
 
-            // 3. 上传结果到 OSS
+                // 3. 下载分割后的图（车身不透明，背景透明）
+                BufferedImage segmented = downloadImage(segmentedUrl);
+                if (segmented != null) {
+                    // 4. AI 精准模式：只对车身像素换色，背景保留原图
+                    colorized = AiApiClient.replaceColorOnSegmented(original, segmented, color.getHexCode());
+                    log.info("AI精准换色完成: photoId={}", photoId);
+                }
+            } catch (Exception apiEx) {
+                log.warn("AI 分割 API 不可用({})，降级为本地算法", apiEx.getMessage());
+            }
+
+            // 降级：AI API 不可用时使用本地区域生长算法
+            if (colorized == null) {
+                log.info("使用本地区域生长算法换色: photoId={}", photoId);
+                colorized = AiApiClient.replaceColor(original, color.getHexCode());
+            }
+
+            // 5. 上传结果到 OSS
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             ImageIO.write(colorized, "PNG", baos);
             byte[] resultBytes = baos.toByteArray();
             String resultUrl = ossService.uploadBytes(resultBytes, "result-" + photoId + ".png");
 
-            // 4. 更新数据库
+            // 6. 更新数据库
             photo.setColor(color);
             photo.setResultUrl(resultUrl);
             photo.setStatus(PhotoStatus.COMPLETED);
