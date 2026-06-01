@@ -64,6 +64,15 @@ public class OssService {
         }
     }
 
+    /**
+     * 上传 byte[] 到 OSS，返回公网 URL。
+     */
+    public String uploadBytes(byte[] data, String filename) {
+        String key = "results/" + UUID.randomUUID().toString() + "-" + filename;
+        ossClient.putObject(bucketName, key, new java.io.ByteArrayInputStream(data));
+        return String.format("https://%s.%s/%s", bucketName, endpoint, key);
+    }
+
     private String getExtension(String filename) {
         if (filename == null || !filename.contains(".")) {
             return "jpg";

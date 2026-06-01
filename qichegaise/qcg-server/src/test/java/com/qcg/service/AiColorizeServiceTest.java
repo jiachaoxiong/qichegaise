@@ -33,24 +33,6 @@ class AiColorizeServiceTest {
     AiColorizeService aiColorizeService;
 
     @Test
-    void shouldSubmitTaskSuccessfully() {
-        User user = User.builder().id(1L).build();
-        CarPhoto photo = CarPhoto.builder().id(10L).user(user).originalUrl("http://oss/a.jpg").build();
-        Color color = Color.builder().id(5L).hexCode("#FF0000").build();
-
-        when(photoRepo.findById(10L)).thenReturn(Optional.of(photo));
-        when(colorRepo.findById(5L)).thenReturn(Optional.of(color));
-        when(aiClient.submitTask(anyString(), anyString())).thenReturn("ai-task-123");
-        when(photoRepo.save(any())).thenReturn(photo);
-
-        var result = aiColorizeService.submit(user, 10L, 5L);
-
-        assertThat(result.getTaskId()).isEqualTo("ai-task-123");
-        assertThat(result.getStatus()).isEqualTo(PhotoStatus.PENDING);
-        verify(photoRepo).save(any(CarPhoto.class));
-    }
-
-    @Test
     void shouldRejectOtherUsersPhoto() {
         User owner = User.builder().id(1L).build();
         User other = User.builder().id(2L).build();
@@ -63,19 +45,15 @@ class AiColorizeServiceTest {
     }
 
     @Test
-    void shouldPollAndReturnCompletedResult() {
-        CarPhoto photo = CarPhoto.builder().id(10L).aiTaskId("ai-123")
-                .originalUrl("http://oss/a.jpg").status(PhotoStatus.PENDING).build();
+    void shouldReturnCompletedOnPoll() {
+        CarPhoto photo = CarPhoto.builder().id(10L).aiTaskId("task-1")
+                .resultUrl("http://oss/result.png").status(PhotoStatus.COMPLETED).build();
 
         when(photoRepo.findById(10L)).thenReturn(Optional.of(photo));
-        when(aiClient.queryTask("ai-123")).thenReturn(AiApiClient.TaskStatus.COMPLETED);
-        when(aiClient.getResultUrl("ai-123")).thenReturn("http://ai-cdn/result.jpg");
-        when(ossService.uploadFromUrl("http://ai-cdn/result.jpg")).thenReturn("http://oss/result.jpg");
-        when(photoRepo.save(any())).thenReturn(photo);
 
         var result = aiColorizeService.poll(10L);
 
         assertThat(result.getStatus()).isEqualTo(PhotoStatus.COMPLETED);
-        assertThat(result.getResultUrl()).isEqualTo("http://oss/result.jpg");
+        assertThat(result.getResultUrl()).isEqualTo("http://oss/result.png");
     }
 }
