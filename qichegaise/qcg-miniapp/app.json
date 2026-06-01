@@ -13,7 +13,7 @@
   "window": {
     "backgroundTextStyle": "light",
     "navigationBarBackgroundColor": "#1a1a1a",
-    "navigationBarTitleText": "改色膜预览",
+    "navigationBarTitleText": "改色膜换色",
     "navigationBarTextStyle": "white"
   },
   "tabBar": {
@@ -30,13 +30,13 @@
       },
       {
         "pagePath": "pages/car-models/car-models",
-        "text": "车型库",
+        "text": "车型",
         "iconPath": "images/car.png",
         "selectedIconPath": "images/car-active.png"
       },
       {
         "pagePath": "pages/my-works/my-works",
-        "text": "我的作品",
+        "text": "作品",
         "iconPath": "images/works.png",
         "selectedIconPath": "images/works-active.png"
       },

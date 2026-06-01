@@ -10,7 +10,7 @@ Page({
 
   onLoad() {
     api.get('/api/car-models').then(models => {
-      const brands = [...new Set(models.map(m => m.brandName).filter(Boolean))].sort()
+      const brands = [...new Set(models.map(m => m.brandName).filter(Boolean))].sort(function(a, b) { return a.localeCompare(b, 'zh') })
       this.setData({ brands, allModels: models, models })
     }).catch(() => {})
   },

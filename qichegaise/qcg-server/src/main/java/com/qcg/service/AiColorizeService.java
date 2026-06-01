@@ -83,9 +83,25 @@ public class AiColorizeService {
         } catch (Exception e) {
             log.error("AI API 调用失败，使用本地降级渲染: photoId={}", photoId, e);
             try {
-                // 降级方案：通过 OSS SDK 下载原图 → 全图着色（不分割）
-                byte[] imageBytes = ossService.download(photo.getOriginalUrl());
-                BufferedImage original = ImageIO.read(new ByteArrayInputStream(imageBytes));
+                // 降级方案：尝试多种方式下载原图 → 全图着色
+                BufferedImage original = null;
+                String imgUrl = photo.getOriginalUrl();
+                if (imgUrl == null || imgUrl.isEmpty()) {
+                    throw new RuntimeException("图片URL为空");
+                }
+                // 先尝试 URL 直接下载（OSS 公网可达时）
+                try {
+                    original = ImageIO.read(new URL(imgUrl));
+                } catch (Exception urlEx) {
+                    // URL 下载失败，尝试 OSS SDK 下载
+                    try {
+                        byte[] bytes = ossService.download(imgUrl);
+                        original = ImageIO.read(new ByteArrayInputStream(bytes));
+                    } catch (Exception sdkEx) {
+                        throw new RuntimeException("所有下载方式均失败", sdkEx);
+                    }
+                }
+                if (original == null) throw new RuntimeException("无法读取图片");
                 BufferedImage tinted = AiApiClient.replaceColor(original, color.getHexCode());
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
                 ImageIO.write(tinted, "PNG", baos);
