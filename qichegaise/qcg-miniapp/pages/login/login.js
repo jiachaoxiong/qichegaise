@@ -1,5 +1,5 @@
 // pages/login/login.js
-const auth = require('../../utils/auth')
+var auth = require('../../utils/auth')
 
 Page({
   data: {
@@ -7,29 +7,28 @@ Page({
     loginError: ''
   },
 
-  onLoad() {
-    // 如果已登录，直接跳到首页
+  onLoad: function () {
     if (getApp().isLoggedIn()) {
       wx.switchTab({ url: '/pages/index/index' })
     }
   },
 
-  async onLogin() {
-    if (this.data.loading) return
-    this.setData({ loading: true, loginError: '' })
+  onLogin: function () {
+    var that = this
+    if (that.data.loading) return
+    that.setData({ loading: true, loginError: '' })
 
-    try {
-      await auth.login()
-      this.setData({ loading: false })
+    auth.login().then(function () {
+      that.setData({ loading: false })
       wx.showToast({ title: '登录成功', icon: 'success' })
-      setTimeout(() => {
+      setTimeout(function () {
         wx.switchTab({ url: '/pages/index/index' })
       }, 800)
-    } catch (err) {
-      this.setData({
+    }).catch(function (err) {
+      that.setData({
         loading: false,
         loginError: err.message || '登录失败，请重试'
       })
-    }
+    })
   }
 })
