@@ -1,0 +1,31 @@
+<view class="container">
+  <view class="section"><text class="section-title">预约信息</text></view>
+  <view class="card form-card">
+    <view class="form-item" bindtap="onPickShop">
+      <text class="label">门店</text>
+      <text class="value {{selectedShop ? '' : 'placeholder'}}">
+        {{selectedShop ? selectedShop.name : '请选择门店'}}
+      </text>
+      <text class="arrow">→</text>
+    </view>
+    <view class="form-item" bindtap="onPickColor" wx:if="{{selectedShop}}">
+      <text class="label">意向颜色</text>
+      <text class="value {{selectedColor ? '' : 'placeholder'}}">
+        {{selectedColor ? selectedColor.name : '请选择颜色（可选）'}}
+      </text>
+      <text class="arrow">→</text>
+    </view>
+    <view class="form-item" bindtap="onPickTime">
+      <text class="label">预约时间</text>
+      <text class="value {{appointmentTime ? '' : 'placeholder'}}">
+        {{appointmentTime || '请选择时间'}}
+      </text>
+      <text class="arrow">→</text>
+    </view>
+    <view class="form-item">
+      <text class="label">备注</text>
+      <input class="value" placeholder="选填" bindinput="onRemarkInput" value="{{remark}}"/>
+    </view>
+  </view>
+  <button class="btn-primary submit-btn" bindtap="onSubmit" disabled="{{!canSubmit}}">提交预约</button>
+</view>

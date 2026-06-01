@@ -5,7 +5,9 @@
     "pages/my-works/my-works",
     "pages/car-models/car-models",
     "pages/shop-detail/shop-detail",
-    "pages/shop-list/shop-list"
+    "pages/shop-list/shop-list",
+    "pages/appointment/appointment",
+    "pages/my-appointments/my-appointments"
   ],
   "window": {
     "backgroundTextStyle": "light",
