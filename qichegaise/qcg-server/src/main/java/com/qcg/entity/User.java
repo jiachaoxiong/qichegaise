@@ -1,5 +1,6 @@
 package com.qcg.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.qcg.enums.UserRole;
 import jakarta.persistence.*;
 import lombok.*;
@@ -12,6 +13,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

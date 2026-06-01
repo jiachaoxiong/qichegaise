@@ -11,9 +11,13 @@ spring:
     hibernate:
       ddl-auto: none
     show-sql: false
+    open-in-view: true
     properties:
       hibernate:
         format_sql: true
+  jackson:
+    serialization:
+      fail-on-empty-beans: false
   sql:
     init:
       mode: never
