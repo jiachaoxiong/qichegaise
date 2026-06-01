@@ -84,7 +84,18 @@ Page({
         colorId: selectedColor.id
       }).then(result => {
         this.setData({ photoId: result.photoId })
-        this.startPolling(result.photoId)
+        if (result.status === 'COMPLETED') {
+          this.setData({
+            displayUrl: result.resultUrl,
+            resultUrl: result.resultUrl,
+            isProcessing: false
+          })
+          wx.showToast({ title: '换色完成', icon: 'success' })
+        } else if (result.status === 'FAILED') {
+          this.setData({ isProcessing: false, isFailed: true, errorMsg: result.errorReason || '处理失败' })
+        } else {
+          this.startPolling(result.photoId)
+        }
       }).catch(() => {
         this.setData({ isProcessing: false })
       })

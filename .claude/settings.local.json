@@ -28,7 +28,11 @@
       "Bash(nvm list *)",
       "Bash(nohup npm run dev)",
       "Bash(node -e ' *)",
-      "Bash(mysql -uroot -p123456 --default-character-set=utf8mb4 qcg)"
+      "Bash(mysql -uroot -p123456 --default-character-set=utf8mb4 qcg)",
+      "Read(//tmp/**)",
+      "Bash(mysql -uroot -p123456 qcg -e \"SELECT MAX\\(id\\) FROM car_photo\")",
+      "Bash(java -Xbootclasspath/a: -jar /d/ccceshi/qichegaise/qcg-server/target/qcg-server-0.1.0.jar --spring.profiles.active=none)",
+      "Bash(node -e \"console.log\\('test'\\)\")"
     ]
   }
 }

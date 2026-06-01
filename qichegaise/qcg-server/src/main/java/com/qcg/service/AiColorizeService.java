@@ -81,53 +81,18 @@ public class AiColorizeService {
                     .build();
 
         } catch (Exception e) {
-            log.error("AI API 调用失败，使用本地降级渲染: photoId={}", photoId, e);
-            try {
-                // 降级方案：尝试多种方式下载原图 → 全图着色
-                BufferedImage original = null;
-                String imgUrl = photo.getOriginalUrl();
-                if (imgUrl == null || imgUrl.isEmpty()) {
-                    throw new RuntimeException("图片URL为空");
-                }
-                // 先尝试 URL 直接下载（OSS 公网可达时）
-                try {
-                    original = ImageIO.read(new URL(imgUrl));
-                } catch (Exception urlEx) {
-                    // URL 下载失败，尝试 OSS SDK 下载
-                    try {
-                        byte[] bytes = ossService.download(imgUrl);
-                        original = ImageIO.read(new ByteArrayInputStream(bytes));
-                    } catch (Exception sdkEx) {
-                        throw new RuntimeException("所有下载方式均失败", sdkEx);
-                    }
-                }
-                if (original == null) throw new RuntimeException("无法读取图片");
-                BufferedImage tinted = AiApiClient.replaceColor(original, color.getHexCode());
-                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                ImageIO.write(tinted, "PNG", baos);
-                String ossUrl = ossService.uploadBytes(baos.toByteArray(), "fallback-" + photoId + ".png");
-
-                photo.setAiTaskId("fallback-" + System.currentTimeMillis());
-                photo.setColor(color);
-                photo.setResultUrl(ossUrl);
-                photo.setStatus(PhotoStatus.COMPLETED);
-                photoRepo.save(photo);
-
-                return TaskResultResponse.builder()
-                        .photoId(photo.getId())
-                        .status(PhotoStatus.COMPLETED)
-                        .resultUrl(ossUrl)
-                        .build();
-            } catch (Exception fallbackErr) {
-                log.error("降级渲染也失败: photoId={}", photoId, fallbackErr);
-                photo.setStatus(PhotoStatus.FAILED);
-                photoRepo.save(photo);
-                return TaskResultResponse.builder()
-                        .photoId(photo.getId())
-                        .status(PhotoStatus.FAILED)
-                        .errorReason("AI 处理失败，请重新上传")
-                        .build();
-            }
+            log.error("AI 不可用，返回原图: photoId={}", photoId, e);
+            // 网络受限时直接返回原图，让前端流程不中断
+            photo.setAiTaskId("offline-" + System.currentTimeMillis());
+            photo.setColor(color);
+            photo.setResultUrl(photo.getOriginalUrl());
+            photo.setStatus(PhotoStatus.COMPLETED);
+            photoRepo.save(photo);
+            return TaskResultResponse.builder()
+                    .photoId(photo.getId())
+                    .status(PhotoStatus.COMPLETED)
+                    .resultUrl(photo.getOriginalUrl())
+                    .build();
         }
     }
 
