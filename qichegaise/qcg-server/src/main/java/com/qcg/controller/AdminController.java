@@ -25,6 +25,7 @@ public class AdminController {
     private final CarPhotoRepository carPhotoRepo;
     private final ColorRepository colorRepo;
     private final CarModelRepository carModelRepo;
+    private final ShopCaseRepository shopCaseRepo;
 
     @Value("${admin.username:admin}")
     private String adminUsername;
@@ -122,6 +123,19 @@ public class AdminController {
     @DeleteMapping("/car-models/{id}")
     public Result<?> deleteCarModel(@PathVariable Long id) {
         carModelRepo.deleteById(id);
+        return Result.ok();
+    }
+
+    // ──────── 案例管理 ────────
+
+    @GetMapping("/cases")
+    public Result<?> listCases() {
+        return Result.ok(shopCaseRepo.findAll());
+    }
+
+    @DeleteMapping("/cases/{id}")
+    public Result<?> deleteCase(@PathVariable Long id) {
+        shopCaseRepo.deleteById(id);
         return Result.ok();
     }
 }

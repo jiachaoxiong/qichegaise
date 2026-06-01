@@ -26,7 +26,9 @@
       "Bash(nvm install *)",
       "Bash(nvm use *)",
       "Bash(nvm list *)",
-      "Bash(nohup npm run dev)"
+      "Bash(nohup npm run dev)",
+      "Bash(node -e ' *)",
+      "Bash(mysql -uroot -p123456 --default-character-set=utf8mb4 qcg)"
     ]
   }
 }
