@@ -7,4 +7,5 @@ import java.util.List;
 public interface ColorRepository extends JpaRepository<Color, Long> {
     List<Color> findByIsActiveTrue();
     List<Color> findByCategoryAndIsActiveTrue(String category);
+    List<Color> findByBrandIdAndIsActiveTrue(Long brandId);
 }
