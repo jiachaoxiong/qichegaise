@@ -1,0 +1,42 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/color-picker/color-picker",
+    "pages/my-works/my-works",
+    "pages/car-models/car-models"
+  ],
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#1a1a1a",
+    "navigationBarTitleText": "改色膜预览",
+    "navigationBarTextStyle": "white"
+  },
+  "tabBar": {
+    "color": "#999999",
+    "selectedColor": "#ff4444",
+    "backgroundColor": "#ffffff",
+    "borderStyle": "black",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "首页",
+        "iconPath": "images/home.png",
+        "selectedIconPath": "images/home-active.png"
+      },
+      {
+        "pagePath": "pages/car-models/car-models",
+        "text": "车型库",
+        "iconPath": "images/car.png",
+        "selectedIconPath": "images/car-active.png"
+      },
+      {
+        "pagePath": "pages/my-works/my-works",
+        "text": "我的作品",
+        "iconPath": "images/works.png",
+        "selectedIconPath": "images/works-active.png"
+      }
+    ]
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json"
+}
