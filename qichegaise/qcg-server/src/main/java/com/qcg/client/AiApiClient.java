@@ -77,17 +77,29 @@ public class AiApiClient {
 
     /**
      * 调用阿里云 imageseg 的 SegmentCommonImage API。
-     * 自动识别图片中的主体（车）并分割，返回 PNG 图片 URL（主体不透明，背景透明）。
+     * 跨区域方案：下载图片 → 上传到 Shanghai OSS → 同区域调用 API。
+     * 自动识别主体（车）→ 返回透明背景 PNG URL（车身不透明，背景透明）。
      */
     public String segmentVehicle(String imageUrl) throws Exception {
+        // 1. 下载原图
+        byte[] imageBytes;
+        try (InputStream is = new java.net.URL(imageUrl).openStream()) {
+            imageBytes = is.readAllBytes();
+        }
+
+        // 2. 上传到 Shanghai OSS（与 imageseg API 同区域，避免 InvalidImage.Region）
+        String shOssUrl = uploadToShanghaiOss(imageBytes);
+        log.debug("已上传到 Shanghai OSS: {}", shOssUrl);
+
+        // 3. 用 Shanghai URL 调用分割 API
         CommonRequest request = new CommonRequest();
         request.setSysMethod(MethodType.POST);
         request.setSysDomain(apiEndpoint);
         request.setSysVersion("2019-12-30");
         request.setSysAction("SegmentCommonImage");
         request.setSysProtocol(ProtocolType.HTTPS);
-        request.putBodyParameter("ImageURL", imageUrl);
-        // 不设 ReturnForm，默认返回透明背景 PNG——车身不透明、背景透明
+        request.putBodyParameter("ImageURL", shOssUrl);
+        // 默认不设 ReturnForm → 返回透明背景 PNG
 
         CommonResponse response = client.getCommonResponse(request);
         JsonNode root = mapper.readTree(response.getData());
@@ -99,6 +111,40 @@ public class AiApiClient {
             throw new RuntimeException("SegmentCommonImage 失败: " + root.get("Message").asText());
         }
         throw new RuntimeException("SegmentCommonImage 返回异常: " + response.getData());
+    }
+
+    // ── Shanghai OSS（与 imageseg API 同区域）──
+    private static com.aliyun.oss.OSS shOssClient;
+    private static final String SH_BUCKET = "qcg-sh-seg";
+    private static final String SH_ENDPOINT = "oss-cn-shanghai.aliyuncs.com";
+
+    private String uploadToShanghaiOss(byte[] data) {
+        if (shOssClient == null) {
+            String ak = System.getenv("OSS_ACCESS_KEY_ID");
+            String sk = System.getenv("OSS_ACCESS_KEY_SECRET");
+            if (ak == null || sk == null) {
+                throw new RuntimeException("OSS_ACCESS_KEY_ID 和 OSS_ACCESS_KEY_SECRET 环境变量未设置");
+            }
+            shOssClient = new com.aliyun.oss.OSSClientBuilder().build(
+                    SH_ENDPOINT, ak, sk);
+            try {
+                if (!shOssClient.doesBucketExist(SH_BUCKET)) {
+                    shOssClient.createBucket(SH_BUCKET);
+                    log.info("Shanghai OSS bucket 已创建: {}", SH_BUCKET);
+                }
+            } catch (Exception e) {
+                log.warn("Shanghai bucket 检查/创建失败: {}", e.getMessage());
+            }
+        }
+
+        String key = "seg-temp/" + java.util.UUID.randomUUID().toString() + ".jpg";
+        com.aliyun.oss.model.ObjectMetadata meta = new com.aliyun.oss.model.ObjectMetadata();
+        meta.setContentType("image/jpeg");
+        shOssClient.putObject(SH_BUCKET, key, new java.io.ByteArrayInputStream(data), meta);
+
+        // 生成预签名 URL（有效期 5 分钟），无需公开读权限
+        java.util.Date expiration = new java.util.Date(System.currentTimeMillis() + 5 * 60 * 1000);
+        return shOssClient.generatePresignedUrl(SH_BUCKET, key, expiration).toString();
     }
 
     // ──────── 基于分割结果的精准换色 ────────
