@@ -1,0 +1,16 @@
+<view class="container">
+  <view class="shop-card card" wx:for="{{shops}}" wx:key="id"
+        bindtap="onTapShop" data-id="{{item.id}}">
+    <image class="shop-cover" src="{{item.coverUrl}}" mode="aspectFill" wx:if="{{item.coverUrl}}"/>
+    <view class="shop-cover placeholder" wx:else><text>暂无封面</text></view>
+    <view class="shop-info">
+      <text class="shop-name">{{item.name}}</text>
+      <text class="shop-addr">{{item.address || '地址未填写'}}</text>
+      <text class="shop-case-count">{{item.caseCount || 0}} 个案例</text>
+    </view>
+    <view class="shop-arrow">→</view>
+  </view>
+  <view class="empty" wx:if="{{shops.length === 0}}">
+    <text>暂无门店入驻</text>
+  </view>
+</view>

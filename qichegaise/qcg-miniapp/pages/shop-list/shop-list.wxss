@@ -1,0 +1,24 @@
+.shop-card {
+  display: flex;
+  align-items: center;
+  padding: 24rpx;
+  margin-bottom: 16rpx;
+}
+.shop-cover {
+  width: 120rpx; height: 120rpx;
+  border-radius: 12rpx;
+  margin-right: 20rpx;
+  background: #eee;
+}
+.shop-cover.placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22rpx;
+  color: #999;
+}
+.shop-info { flex: 1; display: flex; flex-direction: column; }
+.shop-name { font-size: 30rpx; font-weight: 600; color: #333; }
+.shop-addr { font-size: 24rpx; color: #999; margin-top: 8rpx; }
+.shop-case-count { font-size: 22rpx; color: #ff4444; margin-top: 4rpx; }
+.shop-arrow { font-size: 28rpx; color: #ccc; }

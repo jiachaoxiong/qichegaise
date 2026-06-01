@@ -3,7 +3,9 @@
     "pages/index/index",
     "pages/color-picker/color-picker",
     "pages/my-works/my-works",
-    "pages/car-models/car-models"
+    "pages/car-models/car-models",
+    "pages/shop-detail/shop-detail",
+    "pages/shop-list/shop-list"
   ],
   "window": {
     "backgroundTextStyle": "light",
@@ -34,6 +36,12 @@
         "text": "我的作品",
         "iconPath": "images/works.png",
         "selectedIconPath": "images/works-active.png"
+      },
+      {
+        "pagePath": "pages/shop-list/shop-list",
+        "text": "门店",
+        "iconPath": "images/shop.png",
+        "selectedIconPath": "images/shop-active.png"
       }
     ]
   },
