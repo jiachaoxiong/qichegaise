@@ -22,7 +22,11 @@
       "Bash(curl -s http://localhost:8080/api/colors -H \"Authorization: Bearer test\")",
       "Bash(curl -s http://localhost:8080/api/colors)",
       "Bash(curl -s -X POST http://localhost:8080/api/auth/login -H \"Content-Type: application/json\" -d '{\"code\":\"test\"}')",
-      "Bash(curl *)"
+      "Bash(curl *)",
+      "Bash(nvm install *)",
+      "Bash(nvm use *)",
+      "Bash(nvm list *)",
+      "Bash(nohup npm run dev)"
     ]
   }
 }
