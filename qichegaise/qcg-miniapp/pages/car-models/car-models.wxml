@@ -1,5 +1,5 @@
 <view class="container">
-  <scroll-view scroll-x class="brand-filter" enhanced show-scrollbar="{{false}}">
+  <scroll-view scroll-x class="brand-filter">
     <view class="brand-item {{activeBrand === 'all' ? 'active' : ''}}"
           bindtap="onBrandTap" data-brand="all">全部</view>
     <view class="brand-item {{activeBrand === item ? 'active' : ''}}"
