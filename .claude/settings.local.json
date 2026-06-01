@@ -32,7 +32,9 @@
       "Read(//tmp/**)",
       "Bash(mysql -uroot -p123456 qcg -e \"SELECT MAX\\(id\\) FROM car_photo\")",
       "Bash(java -Xbootclasspath/a: -jar /d/ccceshi/qichegaise/qcg-server/target/qcg-server-0.1.0.jar --spring.profiles.active=none)",
-      "Bash(node -e \"console.log\\('test'\\)\")"
+      "Bash(node -e \"console.log\\('test'\\)\")",
+      "Bash(mysql -uroot -p123456 qcg -e \"SELECT id, original_url, LENGTH\\(original_url\\) FROM car_photo WHERE id IN \\(9,11,12\\)\")",
+      "Bash(mysql -uroot -p123456 qcg -e \"UPDATE car_photo SET user_id=1, status='PENDING', result_url=NULL WHERE id=9\")"
     ]
   }
 }

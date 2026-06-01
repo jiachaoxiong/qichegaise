@@ -25,13 +25,10 @@ Page({
 
   onSelectModel(e) {
     const model = e.currentTarget.dataset.model
-    if (!model.imageUrl) {
-      wx.showToast({ title: '该车型暂无可预览图片', icon: 'none' })
-      return
-    }
     wx.navigateTo({
       url: '/pages/color-picker/color-picker?imageUrl=' +
-           encodeURIComponent(model.imageUrl)
+           encodeURIComponent(model.imageUrl || '') +
+           '&modelName=' + encodeURIComponent(model.brandName + ' ' + model.modelName)
     })
   }
 })

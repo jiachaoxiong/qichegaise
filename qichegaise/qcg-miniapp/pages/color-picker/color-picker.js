@@ -73,42 +73,41 @@ Page({
   },
 
   onApplyColor() {
-    const { photoId, imageUrl, selectedColor } = this.data
+    var that = this
+    var selectedColor = that.data.selectedColor
     if (!selectedColor) return
-
-    this.setData({ isProcessing: true, isFailed: false })
-
-    const submitTask = (pid) => {
-      api.post('/api/ai/colorize', {
-        photoId: parseInt(pid),
-        colorId: selectedColor.id
-      }).then(result => {
-        this.setData({ photoId: result.photoId })
-        if (result.status === 'COMPLETED') {
-          this.setData({
-            displayUrl: result.resultUrl,
-            resultUrl: result.resultUrl,
-            isProcessing: false
-          })
-          wx.showToast({ title: '换色完成', icon: 'success' })
-        } else if (result.status === 'FAILED') {
-          this.setData({ isProcessing: false, isFailed: true, errorMsg: result.errorReason || '处理失败' })
-        } else {
-          this.startPolling(result.photoId)
-        }
-      }).catch(() => {
-        this.setData({ isProcessing: false })
-      })
+    if (!that.data.imageUrl && !that.data.photoId) {
+      wx.showToast({ title: '请先上传车辆图片', icon: 'none' })
+      return
     }
 
-    if (photoId) {
-      submitTask(photoId)
-    } else if (imageUrl) {
-      api.post('/api/photos/from-url', { imageUrl }).then(data => {
-        submitTask(data.id)
-      }).catch(() => {
-        this.setData({ isProcessing: false })
-      })
+    that.setData({ isProcessing: true, isFailed: false })
+
+    function doColorize(pid) {
+      api.post('/api/ai/colorize', { photoId: parseInt(pid), colorId: selectedColor.id })
+        .then(function(result) {
+          that.setData({ photoId: result.photoId })
+          if (result.status === 'COMPLETED') {
+            that.setData({
+              displayUrl: result.resultUrl,
+              resultUrl: result.resultUrl,
+              isProcessing: false
+            })
+            wx.showToast({ title: '换色完成', icon: 'success' })
+          } else if (result.status === 'FAILED') {
+            that.setData({ isProcessing: false, isFailed: true, errorMsg: result.errorReason || '处理失败' })
+          }
+        }).catch(function() {
+          that.setData({ isProcessing: false, isFailed: true, errorMsg: '网络异常，请重试' })
+        })
+    }
+
+    if (that.data.photoId) {
+      doColorize(that.data.photoId)
+    } else if (that.data.imageUrl) {
+      api.post('/api/photos/from-url', { imageUrl: that.data.imageUrl })
+        .then(function(data) { doColorize(data.id) })
+        .catch(function() { that.setData({ isProcessing: false, isFailed: true, errorMsg: '创建失败' }) })
     }
   },
 

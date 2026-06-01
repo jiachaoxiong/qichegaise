@@ -16,13 +16,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
+import java.io.*;
+import java.net.HttpURLConnection;
 import java.net.URL;
 
 /**
- * AI 换色服务——对接阿里云车型分割 + 本地颜色替换。
+ * 本地换色服务——下载原图 → HSB 着色 → 上传 OSS。
+ * 不依赖阿里云视觉 API，纯本地处理。
  */
 @Slf4j
 @Service
@@ -31,12 +31,8 @@ public class AiColorizeService {
 
     private final CarPhotoRepository photoRepo;
     private final ColorRepository colorRepo;
-    private final AiApiClient aiClient;
     private final OssService ossService;
 
-    /**
-     * 提交换色任务——同步完成分割 + 颜色替换 + 上传 OSS。
-     */
     public TaskResultResponse submit(User user, Long photoId, Long colorId) {
         CarPhoto photo = photoRepo.findById(photoId)
                 .orElseThrow(() -> new BusinessException("图片不存在"));
@@ -48,23 +44,82 @@ public class AiColorizeService {
         Color color = colorRepo.findById(colorId)
                 .orElseThrow(() -> new BusinessException("颜色不存在"));
 
-        // 网络环境限制，直接返回原图作为结果
-        photo.setColor(color);
-        photo.setResultUrl(photo.getOriginalUrl());
-        photo.setStatus(PhotoStatus.COMPLETED);
-        photoRepo.save(photo);
+        String imageUrl = photo.getOriginalUrl();
+        if (imageUrl == null || imageUrl.isEmpty()) {
+            throw new BusinessException("图片URL为空，请重新上传");
+        }
 
-        return TaskResultResponse.builder()
-                .photoId(photo.getId())
-                .status(PhotoStatus.COMPLETED)
-                .resultUrl(photo.getOriginalUrl())
-                .build();
+        try {
+            // 1. 下载原图
+            BufferedImage original = downloadImage(imageUrl);
+            if (original == null) {
+                throw new BusinessException("无法读取图片，请确认图片格式正确");
+            }
 
+            // 2. HSB 颜色替换
+            BufferedImage colorized = AiApiClient.replaceColor(original, color.getHexCode());
+
+            // 3. 上传结果到 OSS
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            ImageIO.write(colorized, "PNG", baos);
+            byte[] resultBytes = baos.toByteArray();
+            String resultUrl = ossService.uploadBytes(resultBytes, "result-" + photoId + ".png");
+
+            // 4. 更新数据库
+            photo.setColor(color);
+            photo.setResultUrl(resultUrl);
+            photo.setStatus(PhotoStatus.COMPLETED);
+            photoRepo.save(photo);
+
+            log.info("换色成功: photoId={}, color={}, resultUrl={}", photoId, color.getHexCode(), resultUrl);
+            return TaskResultResponse.builder()
+                    .photoId(photo.getId())
+                    .status(PhotoStatus.COMPLETED)
+                    .resultUrl(resultUrl)
+                    .build();
+
+        } catch (BusinessException e) {
+            throw e;
+        } catch (Exception e) {
+            log.error("换色失败: photoId={}", photoId, e);
+            photo.setStatus(PhotoStatus.FAILED);
+            photoRepo.save(photo);
+            return TaskResultResponse.builder()
+                    .photoId(photo.getId())
+                    .status(PhotoStatus.FAILED)
+                    .errorReason("换色处理失败: " + e.getMessage())
+                    .build();
+        }
     }
 
-    /**
-     * 轮询——换色改为同步后，poll 直接返回数据库中的结果。
-     */
+    /** 下载图片——优先 HTTP，失败则 OSS SDK */
+    private BufferedImage downloadImage(String url) throws IOException {
+        // 先尝试 HTTP 直接下载
+        try {
+            HttpURLConnection conn = (HttpURLConnection) new URL(url).openConnection();
+            conn.setConnectTimeout(10000);
+            conn.setReadTimeout(15000);
+            conn.setRequestProperty("User-Agent", "QCG-Server");
+            try (InputStream is = conn.getInputStream()) {
+                BufferedImage img = ImageIO.read(is);
+                if (img != null) return img;
+            }
+        } catch (Exception httpEx) {
+            log.warn("HTTP下载失败: {}", httpEx.getMessage());
+        }
+
+        // HTTP 失败或返回非图片，尝试 OSS SDK
+        try {
+            byte[] bytes = ossService.download(url);
+            BufferedImage img = ImageIO.read(new ByteArrayInputStream(bytes));
+            if (img != null) return img;
+            throw new IOException("ImageIO 无法解码图片");
+        } catch (Exception ossEx) {
+            log.error("OSS SDK下载也失败: {}", ossEx.getMessage());
+            throw new IOException("所有下载方式均失败: " + url);
+        }
+    }
+
     @Transactional
     public TaskResultResponse poll(Long photoId) {
         CarPhoto photo = photoRepo.findById(photoId)
@@ -83,7 +138,7 @@ public class AiColorizeService {
             return TaskResultResponse.builder()
                     .photoId(photo.getId())
                     .status(PhotoStatus.FAILED)
-                    .errorReason("AI 处理失败")
+                    .errorReason("换色处理失败")
                     .build();
         }
 
