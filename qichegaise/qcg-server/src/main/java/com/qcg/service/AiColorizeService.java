@@ -81,15 +81,37 @@ public class AiColorizeService {
                     .build();
 
         } catch (Exception e) {
-            log.error("AI 换色失败: photoId={}", photoId, e);
-            photo.setStatus(PhotoStatus.FAILED);
-            photoRepo.save(photo);
+            log.error("AI API 调用失败，使用本地降级渲染: photoId={}", photoId, e);
+            try {
+                // 降级方案：通过 OSS SDK 下载原图 → 全图着色（不分割）
+                byte[] imageBytes = ossService.download(photo.getOriginalUrl());
+                BufferedImage original = ImageIO.read(new ByteArrayInputStream(imageBytes));
+                BufferedImage tinted = AiApiClient.replaceColor(original, color.getHexCode());
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                ImageIO.write(tinted, "PNG", baos);
+                String ossUrl = ossService.uploadBytes(baos.toByteArray(), "fallback-" + photoId + ".png");
 
-            return TaskResultResponse.builder()
-                    .photoId(photo.getId())
-                    .status(PhotoStatus.FAILED)
-                    .errorReason("AI 处理失败: " + e.getMessage())
-                    .build();
+                photo.setAiTaskId("fallback-" + System.currentTimeMillis());
+                photo.setColor(color);
+                photo.setResultUrl(ossUrl);
+                photo.setStatus(PhotoStatus.COMPLETED);
+                photoRepo.save(photo);
+
+                return TaskResultResponse.builder()
+                        .photoId(photo.getId())
+                        .status(PhotoStatus.COMPLETED)
+                        .resultUrl(ossUrl)
+                        .build();
+            } catch (Exception fallbackErr) {
+                log.error("降级渲染也失败: photoId={}", photoId, fallbackErr);
+                photo.setStatus(PhotoStatus.FAILED);
+                photoRepo.save(photo);
+                return TaskResultResponse.builder()
+                        .photoId(photo.getId())
+                        .status(PhotoStatus.FAILED)
+                        .errorReason("AI 处理失败，请重新上传")
+                        .build();
+            }
         }
     }
 

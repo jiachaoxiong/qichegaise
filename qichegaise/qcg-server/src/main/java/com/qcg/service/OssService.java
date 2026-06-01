@@ -73,6 +73,22 @@ public class OssService {
         return String.format("https://%s.%s/%s", bucketName, endpoint, key);
     }
 
+    /**
+     * 从 OSS 下载文件（使用 SDK 认证，不需要公网读权限）。
+     */
+    public byte[] download(String ossUrl) {
+        try {
+            // 解析 OSS URL: https://bucket.endpoint/key
+            String prefix = String.format("https://%s.%s/", bucketName, endpoint);
+            String key = ossUrl.substring(prefix.length());
+            var obj = ossClient.getObject(bucketName, key);
+            return obj.getObjectContent().readAllBytes();
+        } catch (Exception e) {
+            log.error("OSS 下载失败: {}", ossUrl, e);
+            throw new BusinessException(500, "图片下载失败");
+        }
+    }
+
     private String getExtension(String filename) {
         if (filename == null || !filename.contains(".")) {
             return "jpg";
