@@ -24,6 +24,7 @@ public class AdminController {
     private final AppointmentRepository appointmentRepo;
     private final CarPhotoRepository carPhotoRepo;
     private final ColorRepository colorRepo;
+    private final CarModelRepository carModelRepo;
 
     @Value("${admin.username:admin}")
     private String adminUsername;
@@ -95,5 +96,32 @@ public class AdminController {
     @GetMapping("/shops")
     public Result<?> listShops() {
         return Result.ok(shopRepo.findAll());
+    }
+
+    // ──────── 车型管理 ────────
+
+    @GetMapping("/car-models")
+    public Result<?> listCarModels(@RequestParam(required = false) String brand) {
+        if (brand != null && !brand.isEmpty()) {
+            return Result.ok(carModelRepo.findByBrandNameAndIsActiveTrue(brand));
+        }
+        return Result.ok(carModelRepo.findAll());
+    }
+
+    @PutMapping("/car-models/{id}")
+    public Result<?> updateCarModel(@PathVariable Long id, @RequestBody Map<String, Object> body) {
+        var model = carModelRepo.findById(id).orElseThrow(() -> new RuntimeException("车型不存在"));
+        if (body.containsKey("imageUrl")) model.setImageUrl((String) body.get("imageUrl"));
+        if (body.containsKey("bodyType")) model.setBodyType((String) body.get("bodyType"));
+        if (body.containsKey("year")) model.setYear((String) body.get("year"));
+        if (body.containsKey("isActive")) model.setIsActive((Boolean) body.get("isActive"));
+        carModelRepo.save(model);
+        return Result.ok();
+    }
+
+    @DeleteMapping("/car-models/{id}")
+    public Result<?> deleteCarModel(@PathVariable Long id) {
+        carModelRepo.deleteById(id);
+        return Result.ok();
     }
 }
