@@ -1,0 +1,34 @@
+<view class="container">
+  <view class="hero">
+    <text class="hero-title">想贴改色膜？\n先看看效果再决定</text>
+    <text class="hero-sub">上传你的爱车照片，即刻预览换色效果</text>
+  </view>
+
+  <view class="card entry-card" bindtap="onUploadPhoto">
+    <view class="entry-icon">📷</view>
+    <view class="entry-text">
+      <text class="entry-title">拍摄/上传我的车</text>
+      <text class="entry-desc">从相册选择或现场拍照</text>
+    </view>
+    <text class="entry-arrow">→</text>
+  </view>
+
+  <view class="card entry-card" bindtap="onSelectModel">
+    <view class="entry-icon">🚗</view>
+    <view class="entry-text">
+      <text class="entry-title">选择预设车型</text>
+      <text class="entry-desc">从车型库快速体验</text>
+    </view>
+    <text class="entry-arrow">→</text>
+  </view>
+
+  <view class="recent-section" wx:if="{{recentWorks.length > 0}}">
+    <text class="section-title">最近作品</text>
+    <scroll-view scroll-x class="recent-scroll">
+      <view class="recent-item" wx:for="{{recentWorks}}" wx:key="id"
+            bindtap="onTapWork" data-id="{{item.id}}">
+        <image src="{{item.resultUrl || item.originalUrl}}" mode="aspectFill"/>
+      </view>
+    </scroll-view>
+  </view>
+</view>
