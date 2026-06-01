@@ -39,6 +39,5 @@ oss:
   bucket-name: ${OSS_BUCKET:qcg-photos}
 
 ai:
-  api-url: ${AI_API_URL:https://api.example.com/v1/colorize}
-  api-key: ${AI_API_KEY:your-api-key}
+  endpoint: ${AI_ENDPOINT:vision.aliyuncs.com}
   timeout: 30000
