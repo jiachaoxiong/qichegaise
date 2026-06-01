@@ -40,4 +40,7 @@ public class Appointment {
 
     @Column(length = 256)
     private String remark;
+
+    @Builder.Default
+    private LocalDateTime createdAt = LocalDateTime.now();
 }
