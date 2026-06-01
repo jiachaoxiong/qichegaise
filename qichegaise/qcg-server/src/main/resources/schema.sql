@@ -104,3 +104,14 @@ CREATE TABLE IF NOT EXISTS appointment (
     FOREIGN KEY (car_photo_id) REFERENCES car_photo(id),
     FOREIGN KEY (color_id) REFERENCES color(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- 收藏表 (Phase 2)
+CREATE TABLE IF NOT EXISTS favorite (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    user_id BIGINT NOT NULL,
+    shop_id BIGINT NOT NULL,
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE KEY uk_user_shop (user_id, shop_id),
+    FOREIGN KEY (user_id) REFERENCES `user`(id),
+    FOREIGN KEY (shop_id) REFERENCES shop(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
