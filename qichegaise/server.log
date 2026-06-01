@@ -23,3 +23,48 @@
 [INFO] --- maven-compiler-plugin:3.11.0:testCompile (default-testCompile) @ qcg-server ---
 [INFO] Changes detected - recompiling the module! :source
 [INFO] Compiling 4 source files with javac [debug release 17] to target\test-classes
+[INFO] 
+[INFO] <<< spring-boot-maven-plugin:3.2.5:run (default-cli) < test-compile @ qcg-server <<<
+[INFO] 
+[INFO] 
+[INFO] --- spring-boot-maven-plugin:3.2.5:run (default-cli) @ qcg-server ---
+[INFO] Attaching agents: []
+Standard Commons Logging discovery in action with spring-jcl: please remove commons-logging.jar from classpath in order to avoid potential conflicts
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+ :: Spring Boot ::                (v3.2.5)
+
+2026-06-01T17:32:51.787+08:00  INFO 7804 --- [           main] com.qcg.QcgApplication                   : Starting QcgApplication using Java 17.0.19 with PID 7804 (D:\ccceshi\qichegaise\qcg-server\target\classes started by 26234 in D:\ccceshi\qichegaise\qcg-server)
+2026-06-01T17:32:51.787+08:00  INFO 7804 --- [           main] com.qcg.QcgApplication                   : No active profile set, falling back to 1 default profile: "default"
+2026-06-01T17:32:52.233+08:00  INFO 7804 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-06-01T17:32:52.292+08:00  INFO 7804 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 49 ms. Found 9 JPA repository interfaces.
+2026-06-01T17:32:52.713+08:00  INFO 7804 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2026-06-01T17:32:52.718+08:00  INFO 7804 --- [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-06-01T17:32:52.722+08:00  INFO 7804 --- [           main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.20]
+2026-06-01T17:32:52.797+08:00  INFO 7804 --- [           main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2026-06-01T17:32:52.797+08:00  INFO 7804 --- [           main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 980 ms
+Standard Commons Logging discovery in action with spring-jcl: please remove commons-logging.jar from classpath in order to avoid potential conflicts
+2026-06-01T17:32:52.873+08:00  INFO 7804 --- [           main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-06-01T17:32:52.908+08:00  INFO 7804 --- [           main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.4.4.Final
+2026-06-01T17:32:52.932+08:00  INFO 7804 --- [           main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2026-06-01T17:32:53.078+08:00  INFO 7804 --- [           main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-06-01T17:32:53.098+08:00  INFO 7804 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-06-01T17:32:53.212+08:00  INFO 7804 --- [           main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@6f3b13d0
+2026-06-01T17:32:53.217+08:00  INFO 7804 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-06-01T17:32:53.253+08:00  WARN 7804 --- [           main] org.hibernate.dialect.Dialect            : HHH000511: The 5.7.0 version for [org.hibernate.dialect.MySQLDialect] is no longer supported, hence certain features may not work properly. The minimum supported version is 8.0.0. Check the community dialects project for available legacy versions.
+2026-06-01T17:32:53.957+08:00  INFO 7804 --- [           main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-06-01T17:32:53.957+08:00  INFO 7804 --- [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-06-01T17:32:54.539+08:00  WARN 7804 --- [           main] .s.s.UserDetailsServiceAutoConfiguration : 
+
+Using generated security password: 0b937e59-b7ce-437d-bfa1-5e7028e6fc53
+
+This generated password is for development use only. Your security configuration must be updated before running your application in production.
+
+2026-06-01T17:32:54.704+08:00  INFO 7804 --- [           main] o.s.s.web.DefaultSecurityFilterChain     : Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@7a02d760, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@5a86112a, org.springframework.security.web.context.SecurityContextHolderFilter@66075347, org.springframework.security.web.header.HeaderWriterFilter@3304362e, org.springframework.web.filter.CorsFilter@407d2a01, org.springframework.security.web.authentication.logout.LogoutFilter@12faeada, com.qcg.security.JwtAuthFilter@18139a43, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@7927209f, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@283595db, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@3203ffa3, org.springframework.security.web.session.SessionManagementFilter@6287e312, org.springframework.security.web.access.ExceptionTranslationFilter@3021e31, org.springframework.security.web.access.intercept.AuthorizationFilter@5a0f5567]
+2026-06-01T17:32:54.873+08:00  INFO 7804 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path ''
+2026-06-01T17:32:54.878+08:00  INFO 7804 --- [           main] com.qcg.QcgApplication                   : Started QcgApplication in 3.359 seconds (process running for 3.69)
