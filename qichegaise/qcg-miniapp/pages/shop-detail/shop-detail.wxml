@@ -1,0 +1,38 @@
+<view class="container">
+  <view class="shop-header card">
+    <image class="shop-cover-big" src="{{shop.coverUrl}}" mode="aspectFill" wx:if="{{shop.coverUrl}}"/>
+    <view class="shop-cover-big placeholder" wx:else><text>暂无封面</text></view>
+    <view class="shop-meta">
+      <text class="shop-name">{{shop.name}}</text>
+      <text class="shop-addr">📍 {{shop.address || '地址未填写'}}</text>
+      <text class="shop-phone" wx:if="{{shop.phone}}">📞 {{shop.phone}}</text>
+      <text class="shop-desc" wx:if="{{shop.description}}">{{shop.description}}</text>
+    </view>
+    <view class="fav-btn {{isFavorited ? 'faved' : ''}}" bindtap="onToggleFavorite">
+      {{isFavorited ? '❤️ 已收藏' : '🤍 收藏门店'}}
+    </view>
+  </view>
+
+  <view class="section-title">施工案例</view>
+  <view class="case-card card" wx:for="{{cases}}" wx:key="id">
+    <view class="case-compare">
+      <view class="case-img-wrap">
+        <image class="case-img" src="{{item.beforeUrl}}" mode="aspectFit"/>
+        <text class="case-label">施工前</text>
+      </view>
+      <text class="case-arrow">→</text>
+      <view class="case-img-wrap">
+        <image class="case-img" src="{{item.afterUrl}}" mode="aspectFit"/>
+        <text class="case-label">施工后</text>
+      </view>
+    </view>
+    <view class="case-info" wx:if="{{item.carModelName || item.colorName}}">
+      <text wx:if="{{item.carModelName}}">{{item.carModelName}}</text>
+      <text wx:if="{{item.colorName}}"> · {{item.colorName}}</text>
+    </view>
+  </view>
+
+  <view class="empty" wx:if="{{cases.length === 0}}">
+    <text>暂无施工案例</text>
+  </view>
+</view>

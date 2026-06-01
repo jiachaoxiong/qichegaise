@@ -1,0 +1,18 @@
+.shop-header { padding: 0; overflow: hidden; }
+.shop-cover-big { width: 100%; height: 360rpx; }
+.shop-cover-big.placeholder {
+  display: flex; align-items: center; justify-content: center;
+  color: #999; font-size: 28rpx; background: #eee;
+}
+.shop-meta { padding: 24rpx; }
+.shop-name { font-size: 36rpx; font-weight: 700; color: #1a1a1a; }
+.shop-addr, .shop-phone, .shop-desc { display: block; font-size: 26rpx; color: #666; margin-top: 10rpx; }
+.fav-btn { padding: 20rpx 24rpx; text-align: center; font-size: 28rpx; border-top: 1px solid #f0f0f0; color: #666; }
+.fav-btn.faved { color: #ff4444; }
+.section-title { font-size: 32rpx; font-weight: 600; padding: 32rpx 24rpx 16rpx; color: #333; }
+.case-compare { display: flex; align-items: center; gap: 16rpx; }
+.case-img-wrap { flex: 1; text-align: center; }
+.case-img { width: 100%; height: 240rpx; border-radius: 8rpx; background: #f0f0f0; }
+.case-label { display: block; font-size: 22rpx; color: #999; margin-top: 8rpx; }
+.case-arrow { font-size: 28rpx; color: #ccc; }
+.case-info { padding-top: 12rpx; font-size: 24rpx; color: #666; }
