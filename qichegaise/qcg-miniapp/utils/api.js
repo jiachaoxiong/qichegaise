@@ -2,8 +2,12 @@ const app = getApp()
 const auth = require('./auth')
 
 function request(method, path, data = {}) {
-  return auth.ensureLogin().then(() => {
-    return new Promise((resolve, reject) => {
+  // 手动登录：未登录时跳转登录页
+  if (!getApp().isLoggedIn()) {
+    wx.navigateTo({ url: '/pages/login/login' })
+    return Promise.reject(new Error('请先登录'))
+  }
+  return new Promise((resolve, reject) => {
       function doRequest() {
         wx.request({
           url: app.globalData.baseUrl + path,
@@ -29,12 +33,14 @@ function request(method, path, data = {}) {
       }
       doRequest()
     })
-  })
 }
 
 function uploadFile(filePath) {
-  return auth.ensureLogin().then(() => {
-    return new Promise((resolve, reject) => {
+  if (!getApp().isLoggedIn()) {
+    wx.navigateTo({ url: '/pages/login/login' })
+    return Promise.reject(new Error('请先登录'))
+  }
+  return new Promise((resolve, reject) => {
       wx.uploadFile({
         url: app.globalData.baseUrl + '/api/photos/upload',
         filePath: filePath,
@@ -56,7 +62,6 @@ function uploadFile(filePath) {
         }
       })
     })
-  })
 }
 
 module.exports = {

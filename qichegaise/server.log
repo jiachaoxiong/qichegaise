@@ -21,7 +21,8 @@
 [INFO] Copying 1 resource from src\test\resources to target\test-classes
 [INFO] 
 [INFO] --- maven-compiler-plugin:3.11.0:testCompile (default-testCompile) @ qcg-server ---
-[INFO] Nothing to compile - all classes are up to date
+[INFO] Changes detected - recompiling the module! :source
+[INFO] Compiling 4 source files with javac [debug release 17] to target\test-classes
 [INFO] 
 [INFO] <<< spring-boot-maven-plugin:3.2.5:run (default-cli) < test-compile @ qcg-server <<<
 [INFO] 
@@ -38,33 +39,33 @@ Standard Commons Logging discovery in action with spring-jcl: please remove comm
  =========|_|==============|___/=/_/_/_/
  :: Spring Boot ::                (v3.2.5)
 
-2026-06-01T16:07:58.657+08:00  INFO 28724 --- [           main] com.qcg.QcgApplication                   : Starting QcgApplication using Java 17.0.19 with PID 28724 (D:\ccceshi\qichegaise\qcg-server\target\classes started by 26234 in D:\ccceshi\qichegaise\qcg-server)
-2026-06-01T16:07:58.659+08:00  INFO 28724 --- [           main] com.qcg.QcgApplication                   : No active profile set, falling back to 1 default profile: "default"
-2026-06-01T16:07:59.139+08:00  INFO 28724 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-2026-06-01T16:07:59.207+08:00  INFO 28724 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 53 ms. Found 9 JPA repository interfaces.
-2026-06-01T16:07:59.645+08:00  INFO 28724 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
-2026-06-01T16:07:59.654+08:00  INFO 28724 --- [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
-2026-06-01T16:07:59.654+08:00  INFO 28724 --- [           main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.20]
-2026-06-01T16:07:59.729+08:00  INFO 28724 --- [           main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
-2026-06-01T16:07:59.729+08:00  INFO 28724 --- [           main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1040 ms
+2026-06-01T16:19:18.790+08:00  INFO 8480 --- [           main] com.qcg.QcgApplication                   : Starting QcgApplication using Java 17.0.19 with PID 8480 (D:\ccceshi\qichegaise\qcg-server\target\classes started by 26234 in D:\ccceshi\qichegaise\qcg-server)
+2026-06-01T16:19:18.790+08:00  INFO 8480 --- [           main] com.qcg.QcgApplication                   : No active profile set, falling back to 1 default profile: "default"
+2026-06-01T16:19:19.234+08:00  INFO 8480 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-06-01T16:19:19.296+08:00  INFO 8480 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 49 ms. Found 9 JPA repository interfaces.
+2026-06-01T16:19:19.715+08:00  INFO 8480 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2026-06-01T16:19:19.723+08:00  INFO 8480 --- [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-06-01T16:19:19.723+08:00  INFO 8480 --- [           main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.20]
+2026-06-01T16:19:19.819+08:00  INFO 8480 --- [           main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2026-06-01T16:19:19.821+08:00  INFO 8480 --- [           main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 998 ms
 Standard Commons Logging discovery in action with spring-jcl: please remove commons-logging.jar from classpath in order to avoid potential conflicts
-2026-06-01T16:07:59.819+08:00  INFO 28724 --- [           main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
-2026-06-01T16:07:59.855+08:00  INFO 28724 --- [           main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.4.4.Final
-2026-06-01T16:07:59.879+08:00  INFO 28724 --- [           main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
-2026-06-01T16:08:00.026+08:00  INFO 28724 --- [           main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
-2026-06-01T16:08:00.045+08:00  INFO 28724 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
-2026-06-01T16:08:00.169+08:00  INFO 28724 --- [           main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@2b7774d5
-2026-06-01T16:08:00.169+08:00  INFO 28724 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
-2026-06-01T16:08:00.204+08:00  WARN 28724 --- [           main] org.hibernate.dialect.Dialect            : HHH000511: The 5.7.0 version for [org.hibernate.dialect.MySQLDialect] is no longer supported, hence certain features may not work properly. The minimum supported version is 8.0.0. Check the community dialects project for available legacy versions.
-2026-06-01T16:08:00.935+08:00  INFO 28724 --- [           main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
-2026-06-01T16:08:00.939+08:00  INFO 28724 --- [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
-2026-06-01T16:08:01.534+08:00  WARN 28724 --- [           main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
-2026-06-01T16:08:01.549+08:00  WARN 28724 --- [           main] .s.s.UserDetailsServiceAutoConfiguration : 
+2026-06-01T16:19:19.908+08:00  INFO 8480 --- [           main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-06-01T16:19:19.942+08:00  INFO 8480 --- [           main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.4.4.Final
+2026-06-01T16:19:19.966+08:00  INFO 8480 --- [           main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2026-06-01T16:19:20.113+08:00  INFO 8480 --- [           main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-06-01T16:19:20.130+08:00  INFO 8480 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-06-01T16:19:20.249+08:00  INFO 8480 --- [           main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@2321e482
+2026-06-01T16:19:20.249+08:00  INFO 8480 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-06-01T16:19:20.285+08:00  WARN 8480 --- [           main] org.hibernate.dialect.Dialect            : HHH000511: The 5.7.0 version for [org.hibernate.dialect.MySQLDialect] is no longer supported, hence certain features may not work properly. The minimum supported version is 8.0.0. Check the community dialects project for available legacy versions.
+2026-06-01T16:19:20.989+08:00  INFO 8480 --- [           main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-06-01T16:19:20.989+08:00  INFO 8480 --- [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-06-01T16:19:21.561+08:00  WARN 8480 --- [           main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-06-01T16:19:21.577+08:00  WARN 8480 --- [           main] .s.s.UserDetailsServiceAutoConfiguration : 
 
-Using generated security password: bcd15f7b-6c4d-48f1-8e47-5d4030d3e7fe
+Using generated security password: 385f88bb-0a2d-4750-b8e7-9d740ff069ac
 
 This generated password is for development use only. Your security configuration must be updated before running your application in production.
 
-2026-06-01T16:08:01.719+08:00  INFO 28724 --- [           main] o.s.s.web.DefaultSecurityFilterChain     : Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@56c7e2d1, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@2e549515, org.springframework.security.web.context.SecurityContextHolderFilter@21252bef, org.springframework.security.web.header.HeaderWriterFilter@6c2063e0, org.springframework.web.filter.CorsFilter@5b78a946, org.springframework.security.web.authentication.logout.LogoutFilter@1c0ec502, com.qcg.security.JwtAuthFilter@167f9043, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@52984065, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@6dd59886, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@2c34ce24, org.springframework.security.web.session.SessionManagementFilter@76a1cc1a, org.springframework.security.web.access.ExceptionTranslationFilter@44f5259a, org.springframework.security.web.access.intercept.AuthorizationFilter@225b460a]
-2026-06-01T16:08:01.884+08:00  INFO 28724 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path ''
-2026-06-01T16:08:01.889+08:00  INFO 28724 --- [           main] com.qcg.QcgApplication                   : Started QcgApplication in 3.494 seconds (process running for 3.814)
+2026-06-01T16:19:21.745+08:00  INFO 8480 --- [           main] o.s.s.web.DefaultSecurityFilterChain     : Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@1c0ec502, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@6287e312, org.springframework.security.web.context.SecurityContextHolderFilter@22825762, org.springframework.security.web.header.HeaderWriterFilter@472dc215, org.springframework.web.filter.CorsFilter@5a079446, org.springframework.security.web.authentication.logout.LogoutFilter@3021e31, com.qcg.security.JwtAuthFilter@29693b1d, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@5bb7fc38, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@27ea7c8f, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@6a450cb5, org.springframework.security.web.session.SessionManagementFilter@2e871e93, org.springframework.security.web.access.ExceptionTranslationFilter@700b035b, org.springframework.security.web.access.intercept.AuthorizationFilter@74214ac3]
+2026-06-01T16:19:21.903+08:00  INFO 8480 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path ''
+2026-06-01T16:19:21.911+08:00  INFO 8480 --- [           main] com.qcg.QcgApplication                   : Started QcgApplication in 3.382 seconds (process running for 3.711)
