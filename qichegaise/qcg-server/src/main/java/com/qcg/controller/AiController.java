@@ -18,8 +18,10 @@ public class AiController {
 
     @PostMapping("/colorize")
     public Result<?> colorize(@AuthenticationPrincipal User user,
-                              @Valid @RequestBody ColorizeRequest request) {
-        return Result.ok(aiColorizeService.submit(user, request.getPhotoId(), request.getColorId()));
+                              @RequestBody ColorizeRequest request) {
+        // 直接通过service调用，异常由GlobalExceptionHandler处理
+        var result = aiColorizeService.submit(user, request.getPhotoId(), request.getColorId());
+        return Result.ok(result);
     }
 
     @GetMapping("/tasks/{photoId}")

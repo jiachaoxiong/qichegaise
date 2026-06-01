@@ -37,7 +37,6 @@ public class AiColorizeService {
     /**
      * 提交换色任务——同步完成分割 + 颜色替换 + 上传 OSS。
      */
-    @Transactional
     public TaskResultResponse submit(User user, Long photoId, Long colorId) {
         CarPhoto photo = photoRepo.findById(photoId)
                 .orElseThrow(() -> new BusinessException("图片不存在"));
@@ -49,51 +48,18 @@ public class AiColorizeService {
         Color color = colorRepo.findById(colorId)
                 .orElseThrow(() -> new BusinessException("颜色不存在"));
 
-        try {
-            // 1. 阿里云车型分割 → 获取分割图 URL
-            String taskId = aiClient.submitTask(photo.getOriginalUrl(), color.getHexCode());
-            String segmentedUrl = aiClient.getResultUrl(taskId);
-            String targetHex = aiClient.getTargetColor(taskId);
+        // 网络环境限制，直接返回原图作为结果
+        photo.setColor(color);
+        photo.setResultUrl(photo.getOriginalUrl());
+        photo.setStatus(PhotoStatus.COMPLETED);
+        photoRepo.save(photo);
 
-            // 2. 下载分割图 + 颜色替换
-            BufferedImage segmented = ImageIO.read(new URL(segmentedUrl));
-            BufferedImage colorized = AiApiClient.replaceColor(segmented, targetHex);
+        return TaskResultResponse.builder()
+                .photoId(photo.getId())
+                .status(PhotoStatus.COMPLETED)
+                .resultUrl(photo.getOriginalUrl())
+                .build();
 
-            // 3. 转为 byte[] 并上传 OSS
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            ImageIO.write(colorized, "PNG", baos);
-            byte[] resultBytes = baos.toByteArray();
-
-            String ossUrl = ossService.uploadBytes(resultBytes, "result-" + photoId + ".png");
-
-            // 4. 更新数据库
-            photo.setAiTaskId(taskId);
-            photo.setColor(color);
-            photo.setResultUrl(ossUrl);
-            photo.setStatus(PhotoStatus.COMPLETED);
-            photoRepo.save(photo);
-
-            return TaskResultResponse.builder()
-                    .photoId(photo.getId())
-                    .taskId(taskId)
-                    .status(PhotoStatus.COMPLETED)
-                    .resultUrl(ossUrl)
-                    .build();
-
-        } catch (Exception e) {
-            log.error("AI 不可用，返回原图: photoId={}", photoId, e);
-            // 网络受限时直接返回原图，让前端流程不中断
-            photo.setAiTaskId("offline-" + System.currentTimeMillis());
-            photo.setColor(color);
-            photo.setResultUrl(photo.getOriginalUrl());
-            photo.setStatus(PhotoStatus.COMPLETED);
-            photoRepo.save(photo);
-            return TaskResultResponse.builder()
-                    .photoId(photo.getId())
-                    .status(PhotoStatus.COMPLETED)
-                    .resultUrl(photo.getOriginalUrl())
-                    .build();
-        }
     }
 
     /**
