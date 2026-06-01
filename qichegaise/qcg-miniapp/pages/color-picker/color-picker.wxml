@@ -1,0 +1,47 @@
+<view class="container">
+  <view class="preview-area">
+    <image class="car-image" src="{{displayUrl}}" mode="aspectFit"/>
+    <view class="processing-mask" wx:if="{{isProcessing}}">
+      <view class="spinner"></view>
+      <text class="processing-text">AI 正在换色中...</text>
+    </view>
+    <view class="failed-mask" wx:if="{{isFailed}}">
+      <text class="failed-text">{{errorMsg}}</text>
+      <button class="retry-btn" bindtap="onRetry" size="mini">重新上传</button>
+    </view>
+  </view>
+
+  <view class="selected-color-bar" wx:if="{{selectedColor}}">
+    <view class="color-dot" style="background-color: {{selectedColor.hexCode}};"></view>
+    <text class="color-name">{{selectedColor.name}}</text>
+  </view>
+
+  <scroll-view scroll-x class="category-tabs">
+    <view class="tab-item {{activeCategory === 'all' ? 'active' : ''}}"
+          bindtap="onCategoryTap" data-cat="all">全部</view>
+    <view class="tab-item {{activeCategory === item ? 'active' : ''}}"
+          wx:for="{{categories}}" wx:key="*this"
+          bindtap="onCategoryTap" data-cat="{{item}}">{{item}}</view>
+  </scroll-view>
+
+  <view class="color-grid">
+    <view class="color-item" wx:for="{{filteredColors}}" wx:key="id"
+          bindtap="onColorTap" data-color="{{item}}">
+      <view class="color-swatch" style="background-color: {{item.hexCode}};">
+        <view class="check-mark" wx:if="{{selectedColor && selectedColor.id === item.id}}">✓</view>
+      </view>
+      <text class="color-label">{{item.name}}</text>
+    </view>
+  </view>
+
+  <view class="bottom-bar">
+    <button class="btn-primary" bindtap="onApplyColor"
+            disabled="{{!selectedColor || isProcessing}}">
+      {{isProcessing ? '处理中...' : '应用此颜色'}}
+    </button>
+    <view class="bottom-actions" wx:if="{{resultUrl}}">
+      <button class="action-btn" bindtap="onSave">保存到相册</button>
+      <button class="action-btn" bindtap="onShare">分享给朋友</button>
+    </view>
+  </view>
+</view>
