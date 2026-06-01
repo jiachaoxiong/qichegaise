@@ -20,7 +20,7 @@ Page({
   onLoad(options) {
     const photoId = options.photoId
     const imageUrl = decodeURIComponent(options.imageUrl || '')
-    this.setData({ photoId, displayUrl: imageUrl })
+    this.setData({ photoId, imageUrl: imageUrl, displayUrl: imageUrl })
 
     if (photoId && !imageUrl) {
       this.loadPhotoDetail(photoId)

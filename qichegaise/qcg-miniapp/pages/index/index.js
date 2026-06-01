@@ -19,7 +19,7 @@ Page({
     wx.chooseMedia({
       count: 1,
       mediaType: ['image'],
-      sizeType: ['compressed'],
+      sizeType: ['original'],
       sourceType: ['album', 'camera'],
       success(res) {
         const tempFilePath = res.tempFiles[0].tempFilePath

@@ -65,11 +65,21 @@ public class OssService {
     }
 
     /**
-     * 上传 byte[] 到 OSS，返回公网 URL。
+     * 上传 byte[] 到 OSS，返回公网 URL（默认 results 目录）。
      */
     public String uploadBytes(byte[] data, String filename) {
-        String key = "results/" + UUID.randomUUID().toString() + "-" + filename;
-        ossClient.putObject(bucketName, key, new java.io.ByteArrayInputStream(data));
+        return uploadBytes("results", data, filename);
+    }
+
+    /**
+     * 上传 byte[] 到 OSS 指定文件夹，返回公网 URL。
+     */
+    public String uploadBytes(String folder, byte[] data, String filename) {
+        String key = folder + "/" + UUID.randomUUID().toString() + "-" + filename;
+        String format = key.substring(key.lastIndexOf('.') + 1);
+        com.aliyun.oss.model.ObjectMetadata meta = new com.aliyun.oss.model.ObjectMetadata();
+        meta.setContentType("image/" + ("jpg".equals(format) ? "jpeg" : format));
+        ossClient.putObject(bucketName, key, new java.io.ByteArrayInputStream(data), meta);
         return String.format("https://%s.%s/%s", bucketName, endpoint, key);
     }
 
