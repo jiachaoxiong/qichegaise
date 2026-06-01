@@ -30,7 +30,7 @@ public class ShopCase {
     @JoinColumn(name = "color_id")
     private Color color;
 
-    @Column(length = 64)
+    @Column(name = "car_model", length = 64)
     private String carModelName;
 
     private String description;
